@@ -5,7 +5,6 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-
 // ポート番号
 const unsigned short SERVERPORT = 8888;
 // 送受信するメッセージの最大値
@@ -84,8 +83,10 @@ int main() {
 
     std::cout << "Client connected." << std::endl;
 
-    // クライアントとの通信
-    while (true) {
+    // 3回勝負
+    for (int i = 0; i < 3; ++i) {
+        std::cout << "Round " << i + 1 << std::endl;
+
         // クライアントから選択を受信
         int clientChoice;
         int bytesReceived = recv(clientSocket, reinterpret_cast<char*>(&clientChoice), sizeof(clientChoice), 0);
@@ -94,11 +95,15 @@ int main() {
             break;
         }
 
-        // サーバーの選択をランダムに決定
-        Choice serverChoice = getRandomChoice();
+        // サーバーの選択をユーザーに入力させる
+        int serverChoice;
+        do {
+            std::cout << "Enter server's move (1: Rock, 2: Paper, 3: Scissors): ";
+            std::cin >> serverChoice;
+        } while (serverChoice < 1 || serverChoice > 3);
 
         // 選択結果を比較して結果を送信
-        int result = compareChoices(static_cast<Choice>(clientChoice), serverChoice);
+        int result = compareChoices(static_cast<Choice>(clientChoice), static_cast<Choice>(serverChoice));
         send(clientSocket, reinterpret_cast<const char*>(&result), sizeof(result), 0);
     }
 
