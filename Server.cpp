@@ -11,7 +11,7 @@ const unsigned short SERVERPORT = 8888;
 const unsigned int MESSAGELENGTH = 1024;
 
 enum class Choice {
-    ROCK,
+    ROCK = 1,
     PAPER,
     SCISSORS
 };
@@ -28,7 +28,7 @@ int compareChoices(Choice clientChoice, Choice serverChoice) {
         (clientChoice == Choice::PAPER && serverChoice == Choice::ROCK) ||
         (clientChoice == Choice::SCISSORS && serverChoice == Choice::PAPER))
         return 1; // Client wins
-    else
+    else 
         return -1; // Server wins
 }
 
@@ -90,6 +90,8 @@ int main() {
         // クライアントから選択を受信
         int clientChoice;
         int bytesReceived = recv(clientSocket, reinterpret_cast<char*>(&clientChoice), sizeof(clientChoice), 0);
+        std::cout << bytesReceived << clientChoice << std::endl;
+
         if (bytesReceived <= 0) {
             std::cerr << "Recv failed or client disconnected." << std::endl;
             break;
